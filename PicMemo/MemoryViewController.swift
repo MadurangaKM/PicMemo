@@ -29,78 +29,99 @@ class MemoryViewController: UICollectionViewController, UIImagePickerControllerD
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem=UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
-        recordingURL = getDocumentDirectory().appendingPathComponent("recording.m4a")
+        recordingURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
 
         // Do any additional setup after loading the view.
-        loadMemory()
+        loadMemories()
     }
-    func checkPermission(){
-        let photoAuthorized = PHPhotoLibrary.authorizationStatus() == .authorized
+    func checkPermissions() {
+        
+        //check status for all 3 permissions
+        
+        let photosAuthorized = PHPhotoLibrary.authorizationStatus() == .authorized
         let recordingAuthorized = AVAudioSession.sharedInstance().recordPermission() == .granted
         let transcribeAuthorized = SFSpeechRecognizer.authorizationStatus() == .authorized
         
-        let authorized = photoAuthorized && recordingAuthorized && transcribeAuthorized
+        //make a single boolean out of all three
         
-        if authorized==false{
-            if let vc = storyboard?.instantiateViewController(withIdentifier:"FirstRun"){
-                navigationController?.present(vc,animated: true)
+        let authorized = photosAuthorized && recordingAuthorized && transcribeAuthorized
+        
+        //if were missing one, show the first run screen
+        
+        if authorized == false {
+            
+            if let vc = storyboard?.instantiateViewController(withIdentifier: "FirstRun") {
+                
+                navigationController?.present(vc, animated: true)
             }
-            }
-        
-        
-        
+        }
     }
     
-    override func viewDidAppear(_ _animated:Bool){
-        super.viewDidAppear(_animated)
-        checkPermission()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        checkPermissions()
     }
-
-    func getDocumentDirectory()-> URL{
+    
+    
+    func getDocumentsDirectory() -> URL {
+        
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentDirectory = paths[0]
-        return documentDirectory
+        let documentsDirectory = paths[0]
+        
+        return documentsDirectory
     }
     
-    func loadMemory(){
-        memories.removeAll()
-        guard let files = try?
-        FileManager.default.contentsOfDirectory(at: getDocumentDirectory(),
-            includingPropertiesForKeys: nil , options: []) else {return}
+    func loadMemories() {
         
-        for file in files{
+        memories.removeAll()
+        
+        //attempt to load all the memories in our documents directory
+        guard let files = try? FileManager.default.contentsOfDirectory(at: getDocumentsDirectory(), includingPropertiesForKeys: nil, options: []) else { return }
+        
+        //loop over every file found
+        for file in files {
             let filename = file.lastPathComponent
-            if  filename.hasSuffix (".thumb"){
-                let noExtention = filename.replacingOccurrences(of: ".thumb", with: "")
-                let memoryPath = getDocumentDirectory().appendingPathComponent(noExtention)
+            
+            //check it ends with ".thumb" so we dont count each memory more than once
+            if filename.hasSuffix(".thumb") {
+                
+                //get the root name of the memory (i.e., without its path extension)
+                let noExtension = filename.replacingOccurrences(of: ".thumb", with: "")
+                
+                //create a full path from the memory
+                let memoryPath = getDocumentsDirectory().appendingPathComponent(noExtension)
+                
+                //add it to our array
                 memories.append(memoryPath)
             }
         }
-        filteredMemories=memories
+        
+        filteredMemories = memories
+        
+        //reload our list of memories
         collectionView?.reloadSections(IndexSet(integer: 1))
+        
     }
     
-    
-    
-    
-    
-   
-    
-    func addTapped(){
+    func addTapped() {
+        
         let vc = UIImagePickerController()
         vc.modalPresentationStyle = .formSheet
-        vc.delegate=self
+        vc.delegate = self
         navigationController?.present(vc, animated: true)
     }
-
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         dismiss(animated: true)
         
-        if let possibleImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
+        if let possibleImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            
             saveNewMemory(image: possibleImage)
-            loadMemory()
+            loadMemories()
         }
     }
+    
     func saveNewMemory(image: UIImage) {
         
         //create a unique name for this memory
@@ -112,7 +133,7 @@ class MemoryViewController: UICollectionViewController, UIImagePickerControllerD
         
         do {
             //create a URL where we can write the JPEG to
-            let imagePath = getDocumentDirectory().appendingPathComponent(imageName)
+            let imagePath = getDocumentsDirectory().appendingPathComponent(imageName)
             
             //convert the UIImage into a JPEG data object
             if let jpegData = UIImageJPEGRepresentation(image, 80) {
@@ -121,9 +142,9 @@ class MemoryViewController: UICollectionViewController, UIImagePickerControllerD
                 try jpegData.write(to: imagePath, options: [.atomicWrite])
             }
             //create thumbnail here
-            if let thumbnail = resize (image: image, to: 200) {
+            if let thumbnail = resize(image: image, to: 200) {
                 
-                let imagePath = getDocumentDirectory().appendingPathComponent(thumbnailName)
+                let imagePath = getDocumentsDirectory().appendingPathComponent(thumbnailName)
                 
                 if let jpegData = UIImageJPEGRepresentation(thumbnail, 80) {
                     try jpegData.write(to: imagePath, options: [.atomicWrite])
@@ -134,6 +155,7 @@ class MemoryViewController: UICollectionViewController, UIImagePickerControllerD
             print("Failed to ssave to disk.")
         }
     }
+    
     func resize(image: UIImage, to width: CGFloat) -> UIImage? {
         
         //calculate how much we need to bring the width down to match our target size
@@ -191,7 +213,7 @@ class MemoryViewController: UICollectionViewController, UIImagePickerControllerD
         
         return memory.appendingPathExtension("txt")
     }
-            
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Memory", for: indexPath) as! MemoryCell
@@ -211,7 +233,6 @@ class MemoryViewController: UICollectionViewController, UIImagePickerControllerD
             cell.layer.borderWidth = 3
             cell.layer.cornerRadius = 10
         }
-       
         
         return cell
     }
@@ -244,6 +265,7 @@ class MemoryViewController: UICollectionViewController, UIImagePickerControllerD
             finishRecording(success: true)
         }
     }
+    
     func recordMemory() {
         
         audioPlayer?.stop()
@@ -447,6 +469,8 @@ class MemoryViewController: UICollectionViewController, UIImagePickerControllerD
             collectionView?.reloadSections(IndexSet(integer: 1))
         }
     }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
