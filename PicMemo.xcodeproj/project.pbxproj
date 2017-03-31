@@ -12,6 +12,8 @@
 		684AFD871E8BF4E200584405 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 684AFD851E8BF4E200584405 /* Main.storyboard */; };
 		684AFD891E8BF4E200584405 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 684AFD881E8BF4E200584405 /* Assets.xcassets */; };
 		684AFD8C1E8BF4E200584405 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 684AFD8A1E8BF4E200584405 /* LaunchScreen.storyboard */; };
+		687D8CE61E8CB4D900912DBE /* MemoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687D8CE51E8CB4D900912DBE /* MemoryViewController.swift */; };
+		687D8CE81E8CB5AD00912DBE /* MemoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687D8CE71E8CB5AD00912DBE /* MemoryCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		684AFD881E8BF4E200584405 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		684AFD8B1E8BF4E200584405 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		684AFD8D1E8BF4E200584405 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		687D8CE51E8CB4D900912DBE /* MemoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryViewController.swift; sourceTree = "<group>"; };
+		687D8CE71E8CB5AD00912DBE /* MemoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,8 @@
 				684AFD811E8BF4E200584405 /* AppDelegate.swift */,
 				684AFD831E8BF4E200584405 /* ViewController.swift */,
 				684AFD851E8BF4E200584405 /* Main.storyboard */,
+				687D8CE71E8CB5AD00912DBE /* MemoryCell.swift */,
+				687D8CE51E8CB4D900912DBE /* MemoryViewController.swift */,
 				684AFD881E8BF4E200584405 /* Assets.xcassets */,
 				684AFD8A1E8BF4E200584405 /* LaunchScreen.storyboard */,
 				684AFD8D1E8BF4E200584405 /* Info.plist */,
@@ -136,6 +142,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				687D8CE81E8CB5AD00912DBE /* MemoryCell.swift in Sources */,
+				687D8CE61E8CB4D900912DBE /* MemoryViewController.swift in Sources */,
 				684AFD841E8BF4E200584405 /* ViewController.swift in Sources */,
 				684AFD821E8BF4E200584405 /* AppDelegate.swift in Sources */,
 			);
@@ -299,6 +307,7 @@
 				684AFD921E8BF4E200584405 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
